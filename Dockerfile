@@ -10,8 +10,6 @@ ENV VERSION=2.0.10 \
     LWS_SHA256=73012d7fcf428dedccc816e83a63a01462e27819d5537b8e0d0c7264bfacfad6 \
     CJSON_VERSION=1.7.14 \
     CJSON_SHA256=fb50a663eefdc76bafa80c82bc045af13b1363e8f45cec8b442007aef6a41343
-    AUTHPLUG_VERSION=
-    AUTHPLUG_SHA256=
 
 RUN set -x && \
     apk --no-cache add --virtual build-deps \
