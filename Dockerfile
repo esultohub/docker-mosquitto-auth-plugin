@@ -16,7 +16,7 @@ RUN set -x && \
         build-base \
         cmake \
         gnupg \
-        libressl-dev \
+        openssl-dev \
         libcurl mongo-c-driver sed git c-ares-dev curl-dev mongo-c-driver-dev \
         util-linux-dev && \
     wget https://github.com/warmcat/libwebsockets/archive/v${LWS_VERSION}.tar.gz -O /tmp/lws.tar.gz && \
@@ -82,7 +82,6 @@ RUN set -x && \
         WITH_SHARED_LIBRARIES=yes \
         WITH_SRV=no \
         WITH_STRIP=yes \
-        WITH_TLS_PSK=no \
         WITH_WEBSOCKETS=yes \
         prefix=/usr \
         binary && \
@@ -102,30 +101,25 @@ RUN set -x && \
     chown -R mosquitto:mosquitto /mosquitto && \
     cd /build/mosq/ && \
     git clone https://github.com/vankxr/mosquitto-auth-plug && \
-    cd .. && \
-    pwd && \
-    cd .. && \
-    ls -al /build/mosq && \
-    cp /build/mosq/mosquitto-auth-plug/config.mk.in /build/mosq/mosquitto-auth-plug/config.mk && \
-    sed -i "s/BACKEND_CDB ?= no/BACKEND_CDB ?= no/" /build/mosq/mosquitto-auth-plug/config.mk && \
-    sed -i "s/BACKEND_MYSQL ?= yes/BACKEND_MYSQL ?= no/" /build/mosq/mosquitto-auth-plug/config.mk && \
-    sed -i "s/BACKEND_SQLITE ?= no/BACKEND_SQLITE ?= no/" /build/mosq/mosquitto-auth-plug/config.mk && \
-    sed -i "s/BACKEND_REDIS ?= no/BACKEND_REDIS ?= no/" /build/mosq/mosquitto-auth-plug/config.mk && \
-    sed -i "s/BACKEND_POSTGRES ?= no/BACKEND_POSTGRES ?= no/" /build/mosq/mosquitto-auth-plug/config.mk && \
-    sed -i "s/BACKEND_LDAP ?= no/BACKEND_LDAP ?= no/" /build/mosq/mosquitto-auth-plug/config.mk && \
-    sed -i "s/BACKEND_HTTP ?= no/BACKEND_HTTP ?= yes/" /build/mosq/mosquitto-auth-plug/config.mk && \
-    sed -i "s/BACKEND_JWT ?= no/BACKEND_JWT ?= no/" /build/mosq/mosquitto-auth-plug/config.mk && \
-    sed -i "s/BACKEND_MONGO ?= no/BACKEND_MONGO ?= yes/" /build/mosq/mosquitto-auth-plug/config.mk && \
-    sed -i "s/BACKEND_FILES ?= no/BACKEND_FILES ?= no/" /build/mosq/mosquitto-auth-plug/config.mk && \
-    sed -i "s/BACKEND_MEMCACHED ?= no/BACKEND_MEMCACHED ?= no/" /build/mosq/mosquitto-auth-plug/config.mk && \
-    sed -i "s/MOSQUITTO_SRC =/MOSQUITTO_SRC = ..\//" /build/mosq/mosquitto-auth-plug/config.mk && \
-    make -C /build/mosq/mosquitto-auth-plug -j "$(nproc)" && \
-    ls -al /build/mosq/mosquitto-auth-plug && \
-    install -s -m755 /build/mosq/mosquitto-auth-plug/auth-plug.so /usr/lib/ && \
-    install -s -m755 /build/mosq/mosquitto-auth-plug/np /usr/bin/ && \
+    cd mosquitto-auth-plug && \
+    cp config.mk.in config.mk && \
+    sed -i "s/BACKEND_CDB ?= no/BACKEND_CDB ?= no/" config.mk && \
+    sed -i "s/BACKEND_MYSQL ?= yes/BACKEND_MYSQL ?= no/" config.mk && \
+    sed -i "s/BACKEND_SQLITE ?= no/BACKEND_SQLITE ?= no/" config.mk && \
+    sed -i "s/BACKEND_REDIS ?= no/BACKEND_REDIS ?= no/" config.mk && \
+    sed -i "s/BACKEND_POSTGRES ?= no/BACKEND_POSTGRES ?= no/" config.mk && \
+    sed -i "s/BACKEND_LDAP ?= no/BACKEND_LDAP ?= no/" config.mk && \
+    sed -i "s/BACKEND_HTTP ?= no/BACKEND_HTTP ?= yes/" config.mk && \
+    sed -i "s/BACKEND_JWT ?= no/BACKEND_JWT ?= no/" config.mk && \
+    sed -i "s/BACKEND_MONGO ?= no/BACKEND_MONGO ?= yes/" config.mk && \
+    sed -i "s/BACKEND_FILES ?= no/BACKEND_FILES ?= no/" config.mk && \
+    sed -i "s/BACKEND_MEMCACHED ?= no/BACKEND_MEMCACHED ?= no/" config.mk && \
+    sed -i "s/MOSQUITTO_SRC =/MOSQUITTO_SRC = ..\//" config.mk && \
+    make -j "$(nproc)" && \
+    install -s -m755 auth-plug.so /usr/lib/ && \
+    install -s -m755 np /usr/bin/ && \
     apk --no-cache add \
-        ca-certificates \
-        libressl && \
+        ca-certificates && \
     apk del build-deps && \
     rm -rf /build
 
