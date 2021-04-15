@@ -4,7 +4,7 @@ LABEL maintainer="David Staeheli <david@hosa.ch>" \
     description="Eclipse Mosquitto MQTT Broker"
 
 ENV VERSION=2.0.9 \
-    DOWNLOAD_SHA256=412979b2db0a0020bd02fa64f0a0de9e7000b84462586e32b67f29bb1f6c1685 \
+    DOWNLOAD_SHA256=1b8553ef64a1cf5e4f4cfbe098330ae612adccd3d37f35b2db6f6fab501b01d4 \
     GPG_KEYS=A0D6EEA1DCAE49A635A3B2F0779B22DFB3E717B7 \
     LWS_VERSION=2.4.2
 
